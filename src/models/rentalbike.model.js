@@ -1,15 +1,15 @@
 module.exports = (mongoose) => {
-  const Location = mongoose.model(
-    "location",
+  const Rental = mongoose.model(
+    "rental",
     mongoose.Schema(
       {
         idBike: { type: Number, index: { unique: true, sparse: true } },
-        longitud: { type: Number },
-        latitud: { type: Number },
+        dateInitial: { type: String },
+        dataFinished: { type: String },
       },
       { timestamps: false }
     )
   );
 
-  return Location;
+  return Rental;
 };

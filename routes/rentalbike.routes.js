@@ -1,4 +1,4 @@
-const location = require("../src/controller/location.controller");
+const location = require("../src/controller/rentalbike.controller");
 
 module.exports = function(app) {
 
@@ -22,7 +22,7 @@ module.exports = function(app) {
     router.delete("/:idBike", location.deleteOne);
 
     //Ruta predeterminada
-    app.use('/api/location', router);
+    app.use('/api/rental', router);
 
 }
 

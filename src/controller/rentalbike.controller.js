@@ -1,40 +1,40 @@
 const db = require("../models");
-const Location = db.location;
+const Rental = db.rental;
 
 exports.create = (req, res) => {
   if (!req.body.idBike) {
     res
       .status(400)
-      .send({ message: "Can't add location, idLocation field is required" });
+      .send({ message: "Can't add rental, idBike field is required" });
     return;
   }
 
-  if (!req.body.latitud) {
+  if (!req.body.dateInitial) {
     res
       .status(400)
-      .send({ message: "Can't add location, latitud field is required" });
+      .send({ message: "Can't add rental, dateInitial field is required" });
     return;
   }
-  if (!req.body.longitud) {
+  if (!req.body.dataFinished) {
     res
       .status(400)
-      .send({ message: "Can't add location, longitud field is required" });
+      .send({ message: "Can't add rental, dataFinished field is required" });
     return;
   }
 
-  const location = new Location({
+  const rental = new Rental({
     idBike: req.body.idBike,
-    latitud: req.body.latitud,
-    longitud: req.body.longitud,
+    dateInitial: req.body.dateInitial,
+    dataFinished: req.body.dataFinished,
   });
-  location
-    .save(location)
+  rental
+    .save(rental)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "An error occurred while storing a location",
+        message: err.message || "An error occurred while storing a rental",
       });
     });
 };
@@ -45,13 +45,13 @@ exports.findAll = (req, res) => {
     ? { idBike: { $regex: new RegExp(idBike), $options: "i" } }
     : {};
 
-  Location.find(condicion)
+  Rental.find(condicion)
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "An error occurred when searching for locations",
+        message: err.message || "An error occurred when searching for rental",
       });
     });
 };
@@ -59,17 +59,17 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const idBike = req.params.idBike;
 
-  Location.find({ idBike: idBike })
+  Rental.find({ idBike: idBike })
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "There is no location with the id" + idBike });
+          .send({ message: "There is no rental with the id" + idBike });
       } else res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error bringing the location =" + idBike,
+        message: "Error bringing the rental =" + idBike,
       });
     });
 };
@@ -77,21 +77,21 @@ exports.findOne = (req, res) => {
 exports.deleteOne = (req, res) => {
   const idBike = req.params.idBike;
 
-  Location.deleteOne({ idBike: idBike })
+  Rental.deleteOne({ idBike: idBike })
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Failed to remove location ${idBike}. The student may not have been found.`,
+          message: `Failed to remove rental ${idBike}. The student may not have been found.`,
         });
       } else {
         res.send({
-          message: "The location was successfully removed",
+          message: "The rental was successfully removed",
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error deleting locations",
+        message: "Error deleting rental",
       });
     });
 };
@@ -103,7 +103,7 @@ exports.update = (req, res) => {
     });
   }
 
- Location.updateOne(
+  Rental.updateOne(
     { idBike: req.params.idBike },
     { $set: req.body },
     { useFindAndModify: false }
@@ -111,15 +111,13 @@ exports.update = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Failed to update location with document number =${idBike}. Please check and perform the action again!`,
+          message: `Failed to update rental with document number =${idBike}. Please check and perform the action again!`,
         });
-      } else res.send({ message: "Successfully upgraded location" });
+      } else res.send({ message: "Successfully upgraded rental" });
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          "Error updating location with id" +
-          idBike,
+        message: "Error updating rental with id" + idBike,
       });
     });
 };

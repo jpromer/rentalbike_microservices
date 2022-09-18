@@ -7,7 +7,7 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
-db.location = require("./location.model")(mongoose);
+db.rental = require("./rentalbike.model")(mongoose);
 
 
 module.exports = db;
