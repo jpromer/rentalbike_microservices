@@ -1,6 +1,38 @@
 const db = require("../models");
 const Rental = db.rental;
 
+exports.addRabbitMQMessage = (req, res) => {
+  console.log(req);
+  if (!req.idBike) {
+    res.send({ message: "Can't add rental, idBike field is required" });
+    return;
+  }
+
+  if (!req.dateInitial) {
+    res.send({ message: "Can't add rental, dateInitial field is required" });
+    return;
+  }
+  if (!req.dataFinished) {
+    res.send({ message: "Can't add rental, dataFinished field is required" });
+    return;
+  }
+
+  const rental = new Rental({
+    idBike: req.idBike,
+    dateInitial: req.dateInitial,
+    dataFinished: req.dataFinished,
+  });
+
+  rental
+    .save(rental)
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      return "no hay datos";
+    });
+};
+
 exports.create = (req, res) => {
   if (!req.body.idBike) {
     res

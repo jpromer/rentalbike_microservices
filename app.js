@@ -4,6 +4,27 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const bodyParser = require("body-parser");
+const rental = require("./src/controller/rentalbike.controller");
+const amqp = require("amqplib");
+var channel, connection;
+
+connectQueue(); // call connectQueue function
+async function connectQueue() {
+  try {
+    connection = await amqp.connect("amqp://localhost:5672");
+    channel = await connection.createChannel();
+    // connect to 'test-queue', create one if doesnot exist already
+    await channel.assertQueue("rental");
+
+    channel.consume("rental", (data) => {
+      rental.addRabbitMQMessage(JSON.parse(data.content.toString()));
+      
+      channel.ack(data);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 var app = express();
 
@@ -25,6 +46,7 @@ app.use(function (req, res, next) {
 });
 
 const db = require("./src/models");
+const { connect } = require("http2");
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,

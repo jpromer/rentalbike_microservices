@@ -3,7 +3,7 @@ module.exports = (mongoose) => {
     "rental",
     mongoose.Schema(
       {
-        idBike: { type: Number, index: { unique: true, sparse: true } },
+        idBike: { type: Number },
         dateInitial: { type: String },
         dataFinished: { type: String },
       },
