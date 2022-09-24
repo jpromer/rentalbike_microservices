@@ -11,14 +11,17 @@ var channel, connection;
 connectQueue(); // call connectQueue function
 async function connectQueue() {
   try {
-    connection = await amqp.connect("amqp://localhost:5672");
+    connection = await amqp.connect(
+      "amqps://rakeswqy:TQLGAcSh5D89pvC_OpxFMTScvFTfq1cA@moose.rmq.cloudamqp.com/rakeswqy"
+    );
     channel = await connection.createChannel();
     // connect to 'test-queue', create one if doesnot exist already
     await channel.assertQueue("rental");
 
     channel.consume("rental", (data) => {
+      //console.log(JSON.parse(data.content.toString()));
       rental.addRabbitMQMessage(JSON.parse(data.content.toString()));
-      
+
       channel.ack(data);
     });
   } catch (error) {
@@ -47,6 +50,7 @@ app.use(function (req, res, next) {
 
 const db = require("./src/models");
 const { connect } = require("http2");
+const { Console, log } = require("console");
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,

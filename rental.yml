@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rentalmicroservices-v1
+  labels:
+    app: rentalmicroservices
+    version: "1.0"
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: rentalmicroservices
+  template:
+    metadata:
+      labels:
+        app: rentalmicroservices
+        version: "1.0"
+    spec:
+      containers:
+      - name: rentalmicroservices
+        image: jpromer/microservicesrentalv1
+        ports:
+        - name: http-server
+          containerPort: 3003
